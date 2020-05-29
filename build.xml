@@ -9,6 +9,8 @@
 <property name="mdpc.bdep"    value="debhelper (&gt;= 8), bison"/>
 <property name="mdpc.descrl">
  SC-IM is a spreadsheet program that is based on SC.
+ .
+ Note: 4-clause BSD license!
 </property>
 <property name="mdpc.copyright"
 value="Copyright (c) 2013-2017, Andrés Martinelli &lt;andmarti@gmail.com&gt;"/>
