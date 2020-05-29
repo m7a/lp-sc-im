@@ -1,0 +1,5 @@
+mdvl-sc-im (1.0.0) stable; urgency=medium
+
+  * Package created with MDPC 2
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Fri, 29 May 2020 10:23:00 +0200
