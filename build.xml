@@ -6,6 +6,7 @@
 <property name="mdpc.section" value="math"/>
 <property name="mdpc.descrs"  value="Spreadsheet Calculator Improvised"/>
 <property name="mdpc.arch"    value="any"/>
+<property name="mdpc.bdep"    value="debhelper (&gt;= 8), bison"/>
 <property name="mdpc.descrl">
  SC-IM is a spreadsheet program that is based on SC.
 </property>
