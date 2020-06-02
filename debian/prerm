@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+#DEBHELPER#
+
+if [ "$1" = remove ]; then
+	if [ -f /usr/share/doc/mdvl-sc-im/sc-im_help.gz ] && 
+			[ -f /usr/share/doc/mdvl-sc-im/sc-im_help ]; then
+		rm /usr/share/doc/mdvl-sc-im/sc-im_help
+	fi
+fi

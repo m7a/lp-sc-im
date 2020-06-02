@@ -1,0 +1,3 @@
+TODO: auto-gzipped help file causes documentation not to be found.
+Workaround: gunzip /usr/share/doc/...
+but: There should be a solution not to need that in the first place?

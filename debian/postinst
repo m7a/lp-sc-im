@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+#DEBHELPER#
+
+if [ "$1" = configure ]; then
+	# workaround help being installed as gzip
+	if [ -f /usr/share/doc/mdvl-sc-im/sc-im_help.gz ]; then
+		gunzip < /usr/share/doc/mdvl-sc-im/sc-im_help.gz \
+			> /usr/share/doc/mdvl-sc-im/sc-im_help
+	fi
+fi
