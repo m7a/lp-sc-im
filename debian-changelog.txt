@@ -1,3 +1,10 @@
+mdvl-sc-im (1.0.3) stable; urgency=medium
+
+  * Include libxlsxexport libary to allow exporting to other spreadsheet
+    programs without flattening all formulas.
+
+ -- Linux-Fan, Ma_Sys.ma <Ma_Sys.ma@web.de>  Wed, 03 Jun 2020 01:32:29 +0200
+
 mdvl-sc-im (1.0.2) stable; urgency=medium
 
   * Include fix for help file storage.

@@ -2,20 +2,24 @@
 <project default="build">
 
 <!-- APPLICATION METADATA -->
-<property name="mdpc.name"    value="mdvl-sc-im"/>
+<property name="mdpc.name" value="mdvl-sc-im"/>
 <property name="mdpc.section" value="math"/>
-<property name="mdpc.descrs"  value="Spreadsheet Calculator Improvised"/>
-<property name="mdpc.arch"    value="any"/>
-<property name="mdpc.bdep"    value="debhelper (&gt;= 8), bison"/>
+<property name="mdpc.descrs" value="Spreadsheet Calculator Improvised"/>
+<property name="mdpc.arch" value="any"/>
+<property name="mdpc.bdep" value="debhelper (&gt;= 8), bison"/>
 <property name="mdpc.descrl">
  SC-IM is a spreadsheet program that is based on SC.
  .
- Note: 4-clause BSD license!
+ This distribution includes libxlsx allowing XLSX exports when xlsx_readformulas
+ is set.
+ .
+ Note: sc-im is under 4-clause BSD license. For further licensing details,
+ consult the Debian license file and
+ /usr/share/doc/mdvl-sc-im/libxsltwriter-license.txt for transitive license
+ dependencies.
 </property>
-<property name="mdpc.copyright"
-value="Copyright (c) 2013-2017, Andrés Martinelli &lt;andmarti@gmail.com&gt;"/>
-<property name="mdpc.lblock">
-License:
+<property name="mdpc.copyright.file"><![CDATA[
+License: BSD-4-Clause
  All rights reserved.
  .
  Redistribution and use in source and binary forms, with or without
@@ -28,7 +32,7 @@ License:
  3. All advertising materials mentioning features or use of this software
     must display the following acknowledgement:
     This product includes software developed by Andrés Martinelli
-    &lt;andmarti@gmail.com&gt;.
+    <andmarti@gmail.com>.
  4. Neither the name of the Andrés Martinelli nor the
     names of other contributors may be used to endorse or promote products
     derived from this software without specific prior written permission.
@@ -43,13 +47,57 @@ License:
  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-</property>
+
+License: FreeBSD
+ All rights reserved.
+ .
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are
+ met:
+ .
+ 1. Redistributions of source code must retain the above copyright notice,
+    this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+ IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+ THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ .
+ The views and conclusions contained in the software and documentation are
+ those of the authors and should not be interpreted as representing
+ official policies, either expressed or implied, of the FreeBSD Project.
+
+Files: scim/*
+Copyright: Copyright (c) 2013-2017, Andrés Martinelli <andmarti@gmail.com>
+License: BSD-4-Clause
+
+Files: libxlsxwriter/*
+Copyright: Copyright 2014-2020, John McNamara <jmcnamara@cpan.org>
+License: FreeBSD
+
+Files: README.txt xond.xml debian-changelog.txt build.xml debian/*
+Copyright: (copyright disclaimed) 2020 Ma_Sys.ma <Ma_Sys.ma@web.de>
+License: CC0-1.0
+ See /usr/share/common-licenses/CC0-1.0 on any Debian system.
+]]></property>
 
 <property name="mdpc.file.install">
-build/src/sc-im /usr/bin
-build/src/sc-im.1 /usr/share/man/man1
-build/src/plot_* /usr/share/doc/mdvl-sc-im
-build/sc-im_help /usr/share/doc/mdvl-sc-im
+scim/src/sc-im /usr/bin
+scim/src/sc-im.1 /usr/share/man/man1
+scim/src/plot_* /usr/share/doc/mdvl-sc-im
+scim/sc-im_help /usr/share/doc/mdvl-sc-im
+libxlsxwriter/lib/libxlsxwriter.so /usr/lib
+libxlsxwriter/libxsltwriter-license.txt /usr/share/doc/mdvl-sc-im/libxsltwriter-license.txt
 </property>
 
 <!-- PART OF TPL HERE FOR USE IN BUILD -->
@@ -58,20 +106,39 @@ build/sc-im_help /usr/share/doc/mdvl-sc-im
 <property name="masysma.internal.includepath" location="${masysma.internal.includepath.rel}"/>
 
 <!-- SPECIFIC BUILD -->
-<target name="download">
-	<masysma_require_artifact masysmaartifact="sc-im.git" masysmaatarget="build" masysmaadef="https://github.com/andmarti1424/sc-im"/>
+<target name="downloadlib">
+	<masysma_require_artifact masysmaartifact="libxlsxwriter.git"
+		masysmaatarget="libxlsxwriter"
+		masysmaadef="https://github.com/jmcnamara/libxlsxwriter"/>
 </target>
 
-<target name="build" depends="download">
-	<exec executable="make" dir="build/src" failonerror="true">
+<target name="buildlib" depends="downloadlib">
+	<exec executable="make" dir="libxlsxwriter" failonerror="true">
+		<arg value="-j10"/>
+	</exec>
+	<copy tofile="libxlsxwriter/libxsltwriter-license.txt"
+					file="libxlsxwriter/License.txt"/>
+</target>
+
+<target name="download">
+	<masysma_require_artifact masysmaartifact="sc-im.git"
+			masysmaatarget="scim"
+			masysmaadef="https://github.com/andmarti1424/sc-im"/>
+</target>
+
+<target name="build" depends="download,buildlib">
+	<dirname property="masysma.special.build.dir" file="${ant.file}"/>
+	<!-- enable library build using not-yet-installed lib -->
+	<replaceregexp file="scim/src/Makefile" match="^# NOTE: libxlsxwriter " replace="CFLAGS += -DXLSX_EXPORT -I${masysma.special.build.dir}/libxlsxwriter/include&#x0a;LDFLAGS += -L${masysma.special.build.dir}/libxlsxwriter/lib&#x0a;LDLIBS += -lxlsxwriter&#x0a;#" byline="true"/>
+	<exec executable="make" dir="scim/src" failonerror="true">
 		<arg value="prefix=/usr"/>
 		<arg value="HELPDIR=/usr/share/doc/mdvl-sc-im"/>
 		<arg value="-j10"/>
 	</exec>
-	<copy tofile="build/sc-im_help" file="build/src/doc"/>
+	<copy tofile="scim/sc-im_help" file="scim/src/doc"/>
 </target>
 
-<target name="clean"><delete dir="build"/></target>
+<target name="clean"><delete dir="scim"/><delete dir="libxlsxwriter"/></target>
 <target name="dist-clean" depends="clean"/>
 
 <!-- CI INTEGRATION -->

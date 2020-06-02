@@ -1,3 +1,2 @@
-TODO: auto-gzipped help file causes documentation not to be found.
-Workaround: gunzip /usr/share/doc/...
-but: There should be a solution not to need that in the first place?
+Ma_Sys.ma parts are under CC0 because combination of GPL-3 w/ 4-clause-BSD
+is not possible.

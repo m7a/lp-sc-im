@@ -1,0 +1,22 @@
+<bak>
+<target name="downloadlib">
+	<masysma_require_artifact masysmaartifact="libxls.git" masysmaatarget="libxls" masysmaadef="https://github.com/libxls/libxls"/>
+</target>
+<target name="buildlib" depends="downloadlib">
+	<exec executable="autoreconf" dir="libxls" failonerror="true">
+		<arg value="-i"/>
+		<arg value="-f"/>
+	</exec>
+	<!-- patch buggy generated configure script -->
+	<replaceregexp file="libxls/configure" match="^AX_CXX_COMPILE_STDCXX_11"
+			replace="#AX_CXX_COMPILE_STDCXX_11" byline="true"/>
+	<chmod perm="755" file="libxls/configure"/>
+	<exec executable="./configure" dir="libxls" failonerror="true">
+		<arg value="--exec-prefix=/usr"/>
+	</exec>
+	<exec executable="make" dir="libxls" failonerror="true">
+		<arg value="-j10"/>
+	</exec>
+	<copy tofile="libxls/xls2csv.1" file="libxls/man/xls2csv.man"/>
+</target>
+</bak>
