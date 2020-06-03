@@ -85,7 +85,7 @@ Files: libxlsxwriter/*
 Copyright: Copyright 2014-2020, John McNamara <jmcnamara@cpan.org>
 License: FreeBSD
 
-Files: README.txt xond.xml debian-changelog.txt build.xml debian/*
+Files: README.txt scimrc xond.xml debian-changelog.txt build.xml debian/*
 Copyright: (copyright disclaimed) 2020 Ma_Sys.ma <Ma_Sys.ma@web.de>
 License: CC0-1.0
  See /usr/share/common-licenses/CC0-1.0 on any Debian system.
@@ -96,6 +96,7 @@ scim/src/sc-im /usr/bin
 scim/src/sc-im.1 /usr/share/man/man1
 scim/src/plot_* /usr/share/doc/mdvl-sc-im
 scim/sc-im_help /usr/share/doc/mdvl-sc-im
+scimrc /usr/share/doc/mdvl-sc-im
 libxlsxwriter/lib/libxlsxwriter.so /usr/lib
 libxlsxwriter/libxsltwriter-license.txt /usr/share/doc/mdvl-sc-im/libxsltwriter-license.txt
 </property>
