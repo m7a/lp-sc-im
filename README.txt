@@ -5,6 +5,6 @@ This package builds sc-im with support for libxlsxwriter, see
 
 A colorscheme for use with MDVL systems is included in file `scimrc`.
 
-sc-im is uses a 4-clause BSD license. For simplicity, the Ma_Sys.ma-contributed
+sc-im uses a 4-clause BSD license. For simplicity, the Ma_Sys.ma-contributed
 contents from this repository are placed under CC0, see file `build.xml` for
 details.
